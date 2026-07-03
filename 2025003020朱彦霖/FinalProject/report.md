@@ -1,6 +1,6 @@
 # FocusTimer 专注时光 - 期末大作业报告
 
-GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
+GitHub 仓库地址:https://github.com/1011zyl/2025003020-finalwork.git
 
 ## 1\. 项目简介
 
@@ -43,7 +43,7 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 
 **数据层**
 
-* \[x] Room 数据库,2 张表:`focus\_sessions`(专注记录)、`categories`(任务分类)
+* \[x] Room 数据库,2 张表:`focus\\\_sessions`(专注记录)、`categories`(任务分类)
 * \[x] 完整 CRUD:新增、查询、更新、删除、批量清空
 * \[x] DAO 查询方法返回 `Flow<List<T>>`
 * \[x] 多种查询:全部列表、关键词搜索(LIKE 模糊)、按分类筛选、分组统计(GROUP BY)、时间范围统计
@@ -52,7 +52,7 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 
 **网络层**
 
-* \[x] `AndroidManifest.xml` 声明 `INTERNET` + `ACCESS\_NETWORK\_STATE`
+* \[x] `AndroidManifest.xml` 声明 `INTERNET` + `ACCESS\\\_NETWORK\\\_STATE`
 * \[x] 使用 Retrofit + OkHttp + Moshi(全部经由 `NetworkDataSource` 单例 + `QuoteApiService`)
 * \[x] API 来源:`https://api.quotable.io`(公共名言,无需 API Key)
 * \[x] 网络数据在首页"今日名言"卡片中展示,用户可下拉/点按钮刷新
@@ -83,7 +83,7 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 
 ### 选做项完成情况
 
-* \[x] **复杂数据库查询**:`WHERE task\_name LIKE '%' || :keyword || '%'` 模糊搜索 + `GROUP BY category` 统计查询
+* \[x] **复杂数据库查询**:`WHERE task\\\_name LIKE '%' || :keyword || '%'` 模糊搜索 + `GROUP BY category` 统计查询
 * \[x] **搜索体验优化**:搜索框带清空按钮(尾缀 IconButton)
 * \[x] **错误处理增强**:`runCatching + recoverCatching` 网络失败 fallback + Snackbar 提示
 * \[x] **空/加载/错误状态**:抽取通用组件 `EmptyState`、`LoadingState`、`ErrorState`
@@ -92,18 +92,18 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 
 ## 4\. 数据库设计
 
-数据库名:`focus\_timer\_database`,版本 1,首次启动通过 `AppDatabaseCallback.onCreate` 种入 5 个默认分类。
+数据库名:`focus\\\_timer\\\_database`,版本 1,首次启动通过 `AppDatabaseCallback.onCreate` 种入 5 个默认分类。
 
-### 表 1:`focus\_sessions`(专注记录)
+### 表 1:`focus\\\_sessions`(专注记录)
 
 |字段名|Kotlin 类型|类型|说明|
 |-|-|-|-|
 |`id`|`Long`|主键,自增|记录唯一 ID|
-|`task\_name`|`String`|非空|任务名称(用于模糊搜索)|
-|`duration\_seconds`|`Int`|非空|专注时长(秒)|
+|`task\\\_name`|`String`|非空|任务名称(用于模糊搜索)|
+|`duration\\\_seconds`|`Int`|非空|专注时长(秒)|
 |`category`|`String`|非空|任务分类,与 `categories.name` 关联(逻辑外键)|
-|`completed\_at`|`Long`|非空|完成时间戳(毫秒,用于排序)|
-|`is\_completed`|`Boolean`|默认 true|是否已完成(预留字段)|
+|`completed\\\_at`|`Long`|非空|完成时间戳(毫秒,用于排序)|
+|`is\\\_completed`|`Boolean`|默认 true|是否已完成(预留字段)|
 |`note`|`String`|默认 ""|备注,详情页可编辑|
 
 ### 表 2:`categories`(任务分类)
@@ -112,19 +112,19 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 |-|-|-|-|
 |`id`|`Long`|主键,自增|分类唯一 ID|
 |`name`|`String`|非空|分类名称(唯一)|
-|`color\_hex`|`String`|默认 `#3F51B5`|分类主色(预留,用于徽章染色)|
-|`icon\_name`|`String`|默认 `"Timer"`|图标名(预留)|
-|`created\_at`|`Long`|默认当前时间|创建时间戳|
+|`color\\\_hex`|`String`|默认 `#3F51B5`|分类主色(预留,用于徽章染色)|
+|`icon\\\_name`|`String`|默认 `"Timer"`|图标名(预留)|
+|`created\\\_at`|`Long`|默认当前时间|创建时间戳|
 
 ### 表关系
 
-`focus\_sessions.category` 与 `categories.name` 构成逻辑外键关联,删除分类时**不会**级联删除已有记录(避免数据丢失);UI 列表对无对应分类的记录仍能正常显示,只是不再出现在分类筛选行中。
+`focus\\\_sessions.category` 与 `categories.name` 构成逻辑外键关联,删除分类时**不会**级联删除已有记录(避免数据丢失);UI 列表对无对应分类的记录仍能正常显示,只是不再出现在分类筛选行中。
 
 ### 主要 DAO 查询
 
 `FocusSessionDao`:
 
-* `getAllSessions(): Flow<List<FocusSessionEntity>>` —— 全部记录,按 `completed\_at` 倒序
+* `getAllSessions(): Flow<List<FocusSessionEntity>>` —— 全部记录,按 `completed\\\_at` 倒序
 * `getSessionById(id): FocusSessionEntity?` —— 主键查询(suspend,详情页使用)
 * `searchSessions(keyword): Flow<List<...>>` —— `LIKE '%' || :keyword || '%'` 模糊搜索
 * `getSessionsByCategory(category): Flow<List<...>>` —— 分类精确匹配
@@ -145,14 +145,14 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 ## 5\. 网络功能设计
 
 * **API 来源**:`https://api.quotable.io/`(公共名言 API,无需认证,无需 API Key)
-* **基础地址**:`https://api.quotable.io/`(由 `QuoteApiService.BASE\_URL` 集中管理)
+* **基础地址**:`https://api.quotable.io/`(由 `QuoteApiService.BASE\\\_URL` 集中管理)
 * **接口 1**:`GET /random?maxLength=150` —— 随机获取一条名言(`getRandomQuote`)
-* **接口 2**:`GET /random?tags=wisdom\&maxLength=150` —— 按标签获取(`getQuoteByTag`,首页"励志"按钮使用)
+* **接口 2**:`GET /random?tags=wisdom\\\&maxLength=150` —— 按标签获取(`getQuoteByTag`,首页"励志"按钮使用)
 * **请求方式**:Retrofit 协程挂起函数 + OkHttp(`HttpLoggingInterceptor.Level.BASIC` 打日志,10s 超时)
 * **数据格式**:JSON,经 Moshi(`KotlinJsonAdapterFactory` + `@JsonClass(generateAdapter = true)`)反序列化为 `QuoteDto`
 * **主要返回字段**:
 
-  * `\_id`:名言唯一 ID
+  * `\\\_id`:名言唯一 ID
   * `content`:名言正文
   * `author`:作者
   * `tags`:标签数组(可为 null)
@@ -208,17 +208,17 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 
 ## 7\. DataStore 设计
 
-`UserPreferencesRepository` 使用 DataStore Preferences(name = `user\_preferences`),管理以下 7 个键:
+`UserPreferencesRepository` 使用 DataStore Preferences(name = `user\\\_preferences`),管理以下 7 个键:
 
 |Key|类型|默认值|写入场景|读取场景|
 |-|-|-|-|-|
-|`default\_focus\_minutes`|Int|25|设置页 Slider 调整|App 启动初始化计时|
-|`default\_break\_minutes`|Int|5|设置页 Slider 调整|切换到"休息"模式|
-|`recent\_task\_name`|String|""|一次专注完成|App 启动时填入输入框|
-|`recent\_category`|String|"学习"|一次专注完成|App 启动时选中分类|
-|`theme\_mode`|String|"system"|设置页切换主题|`MainActivity.setContent` 决定 `darkTheme`|
-|`auto\_start\_break`|Boolean|true|设置页 Switch|(预留)专注完成后自动开启休息|
-|`completed\_focus\_count`|Int|0|每次专注完成 +1|设置页"我的成就"展示|
+|`default\\\_focus\\\_minutes`|Int|25|设置页 Slider 调整|App 启动初始化计时|
+|`default\\\_break\\\_minutes`|Int|5|设置页 Slider 调整|切换到"休息"模式|
+|`recent\\\_task\\\_name`|String|""|一次专注完成|App 启动时填入输入框|
+|`recent\\\_category`|String|"学习"|一次专注完成|App 启动时选中分类|
+|`theme\\\_mode`|String|"system"|设置页切换主题|`MainActivity.setContent` 决定 `darkTheme`|
+|`auto\\\_start\\\_break`|Boolean|true|设置页 Switch|(预留)专注完成后自动开启休息|
+|`completed\\\_focus\\\_count`|Int|0|每次专注完成 +1|设置页"我的成就"展示|
 
 所有键均以 `Flow` 形式对外暴露,ViewModel 用 `stateIn(WhileSubscribed(5000))` 转 `StateFlow`,配置变化时不会重复订阅导致数据丢失。
 
@@ -230,8 +230,8 @@ GitHub 仓库地址:https://github.com/1011zyl/MobileSoftwareDevelopment
 data class TimerUiState(
     val mode: TimerMode = FOCUS,          // 专注/休息
     val status: TimerStatus = IDLE,       // IDLE/RUNNING/PAUSED/FINISHED
-    val totalSeconds: Int = 25 \* 60,
-    val remainingSeconds: Int = 25 \* 60,
+    val totalSeconds: Int = 25 \\\* 60,
+    val remainingSeconds: Int = 25 \\\* 60,
     val taskName: String = "",
     val category: String = "学习",
     val isLoading: Boolean = false,
@@ -274,7 +274,7 @@ sealed interface ListUiState<out T> {
 `HistoryViewModel` 同时支持"按关键词搜索"与"按分类筛选",使用 `combine + flatMapLatest` 动态切换数据源:
 
 ```kotlin
-val sourceFlow = combine(\_searchKeyword, \_selectedCategory) { k, c -> k to c }
+val sourceFlow = combine(\\\_searchKeyword, \\\_selectedCategory) { k, c -> k to c }
     .flatMapLatest { (keyword, category) ->
         when {
             keyword.isNotBlank() -> repository.searchSessions(keyword)
@@ -294,11 +294,11 @@ val sourceFlow = combine(\_searchKeyword, \_selectedCategory) { k, c -> k to c }
 |-|-|-|
 |`HomeScreen`|`TimerViewModel.uiState / quoteState`|`FocusSessionDao` / `QuoteApiService` / `OkHttpClient`|
 |`HistoryScreen`|`HistoryViewModel.sessions / categories / categoryStatistics`|SQL 语句、Retrofit 注解|
-|`SettingsScreen`|`SettingsViewModel.\*Minutes / themeMode`|DataStore Key 名、Edit API|
+|`SettingsScreen`|`SettingsViewModel.\\\*Minutes / themeMode`|DataStore Key 名、Edit API|
 
 具体实现要点:
 
-* 写入路径:`ViewModel.xxx() → repository.xxx() → dao.insertXxx() / NetworkDataSource.xxx()`,ViewModel 不直接 `import androidx.room.\*`。
+* 写入路径:`ViewModel.xxx() → repository.xxx() → dao.insertXxx() / NetworkDataSource.xxx()`,ViewModel 不直接 `import androidx.room.\\\*`。
 * 读取路径:`val flow: Flow<...> = sessionDao.xxx()`,ViewModel 通过 `stateIn` 暴露,Composable 通过 `collectAsStateWithLifecycle()` 订阅。
 * 网络容错:`runCatching { api.xxx() }.recoverCatching { fallback.random() }`,UI 拿到的永远是 `Result<FallbackQuote>` 而非裸异常。
 
@@ -366,7 +366,7 @@ val sourceFlow = combine(\_searchKeyword, \_selectedCategory) { k, c -> k to c }
 
 * **问题描述**:历史页需要同时支持"按任务名模糊搜索"和"按分类精确筛选",且两者可能互斥切换,如果用普通 `suspend` 切换会出现竞态。
 * **原因分析**:两个查询源都是冷 Flow,直接用 `await` 顺序调用,旧请求的回调可能在 UI 重组后到达,导致列表闪烁。
-* **解决方案**:`HistoryViewModel` 用 `combine(\_searchKeyword, \_selectedCategory) { ... }.flatMapLatest { ... }` 把两个 `MutableStateFlow` 合成一个数据源,`flatMapLatest` 会在上游变化时取消上一个 Flow 订阅,保证 UI 永远只看到最新一次查询的结果,再 `stateIn(WhileSubscribed(5000))` 暴露给 UI。
+* **解决方案**:`HistoryViewModel` 用 `combine(\\\_searchKeyword, \\\_selectedCategory) { ... }.flatMapLatest { ... }` 把两个 `MutableStateFlow` 合成一个数据源,`flatMapLatest` 会在上游变化时取消上一个 Flow 订阅,保证 UI 永远只看到最新一次查询的结果,再 `stateIn(WhileSubscribed(5000))` 暴露给 UI。
 
 ### 难点 3:网络失败兜底,UI 不卡 Loading
 
@@ -410,7 +410,7 @@ AI 主要用于哪些环节:
 * **推荐 Android 版本**:API 34(Android 14)
 * **开发工具**:Android Studio Hedgehog(2023.1.1)或更新
 * **JDK / Kotlin**:JDK 11、Kotlin 2.0+
-* **特殊权限**:`INTERNET`(获取名言)、`ACCESS\_NETWORK\_STATE`(预留)
+* **特殊权限**:`INTERNET`(获取名言)、`ACCESS\\\_NETWORK\\\_STATE`(预留)
 * **运行步骤**:
 
   1. 克隆仓库:`git clone https://github.com/1011zyl/MobileSoftwareDevelopment`
@@ -443,5 +443,5 @@ AI 主要用于哪些环节:
 * 支持 JSON 导入导出备份;
 * 接入多语言(目前 strings.xml 为中文,需补 en);
 * 主页"今日名言"增加点击复制 / 分享功能;
-* 为 `FocusSession` 增加 `started\_at` / `paused\_seconds` 字段,实现更精细的暂停时长统计。
+* 为 `FocusSession` 增加 `started\\\_at` / `paused\\\_seconds` 字段,实现更精细的暂停时长统计。
 
